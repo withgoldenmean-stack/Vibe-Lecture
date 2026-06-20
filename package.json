@@ -1,6 +1,6 @@
 {
   "name": "vibelecture",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "overrides": {
     "postcss": "^8.5.15"
