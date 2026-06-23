@@ -6,10 +6,15 @@
     "postcss": "^8.5.15"
   },
   "scripts": {
+    "predev": "npm run generate:lesson08",
     "dev": "next dev",
-    "dev:open": "powershell -ExecutionPolicy Bypass -File scripts/restart-open.ps1",
+    "dev:3001": "next dev -p 3001",
+    "dev:open": "powershell -ExecutionPolicy Bypass -File scripts/restart-open.ps1 -Port 3001",
+    "generate:lesson08": "node scripts/generate-lesson08-details.mjs",
+    "prebuild": "npm run generate:lesson08",
     "build": "next build",
     "start": "next start",
+    "start:3001": "next start -p 3001",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "validate:data": "node scripts/validate-lessons.mjs"

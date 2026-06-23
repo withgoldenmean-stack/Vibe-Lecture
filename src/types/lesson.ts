@@ -23,7 +23,12 @@ export type LessonDetailBlock =
     }
   | {
       type: "list";
+      style?: "cards" | "bullets" | "numbers";
       items: LessonListItem[];
+    }
+  | {
+      type: "code";
+      text: string;
     }
   | {
       type: "flow";
@@ -43,6 +48,7 @@ export type LessonSection = {
   content: string;
   activity?: string;
   checklist?: string[];
+  detailTitle?: string;
   detailBlocks?: LessonDetailBlock[];
   comparisonTable?: {
     title: string;

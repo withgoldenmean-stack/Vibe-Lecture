@@ -94,6 +94,31 @@ function DetailBlockView({ block }: { block: LessonDetailBlock }) {
   }
 
   if (block.type === "list") {
+    if (block.style === "bullets" || block.style === "numbers") {
+      const ListTag = block.style === "numbers" ? "ol" : "ul";
+
+      return (
+        <ListTag
+          className={[
+            "max-w-3xl space-y-2 pl-6 text-base font-normal leading-relaxed text-slate-700 marker:font-semibold marker:text-point",
+            block.style === "numbers" ? "list-decimal" : "list-disc"
+          ].join(" ")}
+        >
+          {block.items.map((item, index) => {
+            const title = typeof item === "string" ? item : item.title;
+            const description = typeof item === "string" ? undefined : item.description;
+
+            return (
+              <li key={`${title}-${index}`} className="pl-1">
+                <span>{title}</span>
+                {description ? <span className="ml-1 text-slate-600">{description}</span> : null}
+              </li>
+            );
+          })}
+        </ListTag>
+      );
+    }
+
     return (
       <ul
         className="grid gap-3"
@@ -120,6 +145,14 @@ function DetailBlockView({ block }: { block: LessonDetailBlock }) {
           );
         })}
       </ul>
+    );
+  }
+
+  if (block.type === "code") {
+    return (
+      <pre className="max-w-full overflow-x-auto rounded-lg bg-slate-950 px-4 py-4 text-sm leading-relaxed text-slate-100">
+        <code>{block.text}</code>
+      </pre>
     );
   }
 
@@ -211,11 +244,24 @@ export function ContentBody({ lesson, section }: ContentBodyProps) {
             </div>
           ) : null}
           {section.detailBlocks && section.detailBlocks.length > 0 ? (
-            <div className="mt-7 space-y-5">
-              {section.detailBlocks.map((block, index) => (
-                <DetailBlockView key={`${block.type}-${index}`} block={block} />
-              ))}
-            </div>
+            section.detailTitle ? (
+              <section className="mt-7 rounded-xl border border-blue-200 bg-blue-50/40 px-4 py-5 sm:px-5">
+                <h3 className="border-b border-blue-200 pb-4 text-xl font-semibold text-blue-950">
+                  {section.detailTitle}
+                </h3>
+                <div className="mt-5 space-y-5">
+                  {section.detailBlocks.map((block, index) => (
+                    <DetailBlockView key={`${block.type}-${index}`} block={block} />
+                  ))}
+                </div>
+              </section>
+            ) : (
+              <div className="mt-7 space-y-5">
+                {section.detailBlocks.map((block, index) => (
+                  <DetailBlockView key={`${block.type}-${index}`} block={block} />
+                ))}
+              </div>
+            )
           ) : null}
         </section>
 
