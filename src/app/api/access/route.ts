@@ -23,12 +23,13 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as { code?: string };
   const code = body.code?.trim() ?? "";
   const cookieSecret = getAccessCookieSecret();
+  const approvedCodes = getApprovedAccessCodes();
 
-  if (!cookieSecret) {
+  if (approvedCodes.length === 0) {
     return NextResponse.json(
       {
         approved: false,
-        error: "관리자 승인 설정이 완료되지 않았습니다."
+        error: "관리자 승인코드가 설정되지 않았습니다. Vercel 환경변수 APPROVED_ACCESS_CODES를 등록하세요."
       },
       { status: 500 }
     );
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
 
   response.cookies.set({
     name: ACCESS_COOKIE_NAME,
-    value: cookieSecret,
+    value: cookieSecret || code,
     httpOnly: true,
     secure: isHttps,
     sameSite: "lax",

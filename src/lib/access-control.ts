@@ -23,5 +23,13 @@ export const isApprovedAccessCode = (code: string) => {
 export const hasValidAccessCookie = (cookieValue: string | undefined) => {
   const secret = getAccessCookieSecret();
 
-  return Boolean(secret && cookieValue && cookieValue === secret);
+  if (!cookieValue) {
+    return false;
+  }
+
+  if (secret && cookieValue === secret) {
+    return true;
+  }
+
+  return isApprovedAccessCode(cookieValue);
 };
